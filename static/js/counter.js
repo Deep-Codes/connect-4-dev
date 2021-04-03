@@ -1,7 +1,3 @@
-const addBtn = document.querySelector('#add');
-const subBtn = document.querySelector('#sub');
-const resetBtn = document.querySelector('#reset');
-const val = document.querySelector('#count');
 const board = document.querySelector('#board');
 
 // let data = [...Array(8)].map(() =>
@@ -42,26 +38,9 @@ const renderBoard = (dt) => {
 
 renderBoard(boardData);
 
-let counter = 0;
-let initVal = 0;
-val.innerHTML = counter;
-
 let socket;
 document.addEventListener('DOMContentLoaded', () => {
   socket = io.connect('http://' + document.domain + ':' + location.port + '/');
-
-  addBtn.addEventListener('click', () => {
-    counter++;
-    socket.emit('count', { count: counter });
-  });
-  reset.addEventListener('click', () => {
-    counter = initVal;
-    socket.emit('count', { count: counter });
-  });
-  subBtn.addEventListener('click', () => {
-    counter--;
-    socket.emit('count', { count: counter });
-  });
 
   board.addEventListener('click', (e) => {
     if (e.target.className === 'cell') {
@@ -80,10 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       socket.emit('board', { data: boardData });
     }
-  });
-
-  socket.on('count', (data) => {
-    val.innerHTML = data['count']['count'];
   });
 
   socket.on('board', (data) => {

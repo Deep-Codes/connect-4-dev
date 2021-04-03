@@ -23,11 +23,6 @@ def index():
     return render_template('index.html')
 
 
-@socketio.on('count', namespace='/')
-def count(num):
-    emit('count', {'count': num, 'data': data}, broadcast=True)
-
-
 @socketio.on('board', namespace='/')
 def board(dt):
     emit('board', {'data': dt}, broadcast=True)
