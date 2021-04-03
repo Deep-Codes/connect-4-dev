@@ -1,0 +1,9 @@
+.page {
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+button {
+  max-width: 200px;
+}
