@@ -28,9 +28,9 @@ def count(num):
     emit('count', {'count': num, 'data': data}, broadcast=True)
 
 
-@socketio.on('status', namespace='/')
-def status(dt):
-    emit('status', {'msg': dt})
+@socketio.on('board', namespace='/')
+def board(dt):
+    emit('board', {'data': dt}, broadcast=True)
 
 
 if __name__ == '__main__':
