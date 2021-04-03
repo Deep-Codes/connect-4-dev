@@ -26,3 +26,7 @@ button {
   border-radius: 50%;
   border: 2px solid grey;
 }
+.form-ctx {
+  display: flex;
+  flex-direction: column;
+}
