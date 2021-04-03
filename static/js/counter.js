@@ -45,19 +45,29 @@ document.addEventListener('DOMContentLoaded', () => {
   board.addEventListener('click', (e) => {
     if (e.target.className === 'cell') {
       const id = e.target.id;
-      console.log(id);
-      const player = Math.floor(Math.random() * 2) + 1;
-      boardData[id[1]][[id[2]]] = { player, value: 1 };
-      // console.log(data[id[1]][[id[1]]]);
-      const cell = document.querySelector(`#${id}`);
-      if (player === 2) {
-        cell.style.backgroundColor = 'red';
-      } else if (player === 1) {
-        cell.style.backgroundColor = 'blue';
-      } else {
-        cell.style.backgroundColor = 'grey';
+      // avoid re selecting the cell
+      if (boardData[id[1]][[id[2]]].value === null) {
+        const col = id[2];
+        let fillRowNo;
+        let bool = false;
+        for (let c = 7; c >= 0; c--) {
+          if (boardData[c][col].value === null && !bool) {
+            fillRowNo = c;
+            bool = true;
+          }
+        }
+        const player = Math.floor(Math.random() * 2) + 1;
+        boardData[fillRowNo][[id[2]]] = { player, value: 1 };
+        const cell = document.querySelector(`#${id}`);
+        if (player === 2) {
+          cell.style.backgroundColor = 'red';
+        } else if (player === 1) {
+          cell.style.backgroundColor = 'blue';
+        } else {
+          cell.style.backgroundColor = 'grey';
+        }
+        socket.emit('board', { data: boardData });
       }
-      socket.emit('board', { data: boardData });
     }
   });
 
