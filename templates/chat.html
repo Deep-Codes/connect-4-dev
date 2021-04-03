@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="theme-dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat | Connect-4</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/affinity-css@latest/css/index.css" />
+  <link rel="stylesheet" href="/static/css/index.css" />
+  <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.1/socket.io.js"></script>
+</head>
+
+<body class="page">
+  <h1 class="mt-5">Chat Room</h1>
+  <div>
+    <h2>Room : {{ session['room'] }}</h2>
+    <textarea id="chat" cols="70" rows="10" placeholder="No messages yet" readonly></textarea>
+    <input type="text" id="text" size="60" placeholder="Enter your message here" />
+    <div>
+      <button type="button" id="send">Send</button>
+      <button type="button" onclick="leave_room()">
+        Leave this Chat
+      </button>
+    </div>
+  </div>
+  <script src="../static/js/chat.js"></script>
+</body>
+
+</html>

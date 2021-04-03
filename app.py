@@ -38,6 +38,30 @@ def chat():
             return redirect(url_for('index'))
 
 
+@socketio.on('join', namespace='/chat')
+def join():
+    room = session.get('room')
+    join_room(room)
+    emit('status', {'msg': session.get('username') +
+                    ' has entered the room.'}, room=room)
+
+
+@socketio.on('text', namespace='/chat')
+def text(message):
+    room = session.get('room')
+    emit('message', {'msg': session.get('username') +
+                     ' : ' + message['msg']}, room=room)
+
+
+@socketio.on('left', namespace='/chat')
+def left(message):
+    room = session.get('room')
+    username = session.get('username')
+    leave_room(room)
+    session.clear()
+    emit('status', {'msg': username + ' has left the room.'}, room=room)
+
+
 @app.route('/game', methods=['GET', 'POST'])
 def game():
     return render_template('game.html')
