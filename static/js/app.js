@@ -16,7 +16,7 @@ const { username } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
 });
 
-usernameField.innerHTML = `Welcome ${username}`;
+usernameField.innerHTML = `👋🏽 Welcome ${username.toUpperCase()} !`;
 
 let boardData = [...Array(6)].map(() =>
   Array(7).fill({ player: null, value: null })
@@ -89,28 +89,24 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   socket.on('connect', () => {
-    socket.emit('join', `${username} has joined the chat !`);
-  });
-
-  socket.on('disconnect', () => {
-    socket.emit('left', `${username} has left  the chat !`);
+    socket.emit('join', `🚀 ${username.toUpperCase()} has joined the chat `);
   });
 
   socket.on('status', (msg) => {
-    chatFeed.value = chatFeed.value + '<' + msg + '>\n';
+    chatFeed.value = chatFeed.value + msg + '\n';
   });
 
   socket.on('message', (msg) => {
-    chatFeed.value = chatFeed.value + `${username}: ${msg}` + '\n';
+    chatFeed.value = chatFeed.value + msg + '\n';
   });
 
   sendBtn.addEventListener('click', () => {
-    socket.emit('text', chatInput.value);
+    socket.emit('text', `${username.toUpperCase()}: ${chatInput.value}`);
     chatInput.value = '';
   });
 
   leaveBtn.addEventListener('click', () => {
-    socket.emit('left', `${username} has left the chat !`);
+    socket.emit('left', `💀 ${username.toUpperCase()} has left the chat `);
     window.location.href = '/';
   });
 });
