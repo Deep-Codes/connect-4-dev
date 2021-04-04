@@ -6,8 +6,18 @@
 .w-100 {
   width: 430px;
 }
+select {
+  width: 80px;
+  height: 40px;
+}
+nav {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
 .page {
-  max-width: 760px;
+  max-width: ;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
