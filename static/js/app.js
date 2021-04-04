@@ -5,6 +5,8 @@ const leaveBtn = document.querySelector('#leave-chat-btn');
 const chatInput = document.querySelector('#chat-input');
 const usernameField = document.querySelector('#username');
 let playerCurr = null;
+let bluePlayer = null;
+let redPlayer = null;
 
 // let data = [...Array(8)].map(() =>
 //   Array(8).fill({
@@ -34,12 +36,10 @@ const renderBoard = (dt) => {
       cell.classList.add(`cell`);
       cell.id = `c${i}${j}`;
       if (c.value !== null) {
-        if (c.player === 2) {
+        if (c.player === redPlayer) {
           cell.style.backgroundColor = 'red';
-        } else if (c.player === 1) {
-          cell.style.backgroundColor = 'blue';
         } else {
-          cell.style.backgroundColor = 'grey';
+          cell.style.backgroundColor = 'blue';
         }
       }
       row.appendChild(cell);
@@ -60,15 +60,13 @@ const playMoves = (id) => {
       bool = true;
     }
   }
-  const player = Math.floor(Math.random() * 2) + 1;
-  boardData[fillRowNo][[id[2]]] = { player, value: 1 };
+
+  boardData[fillRowNo][[id[2]]] = { player: playerCurr, value: 1 };
   const cell = document.querySelector(`#${id}`);
-  if (player === 2) {
+  if (playerCurr === redPlayer) {
     cell.style.backgroundColor = 'red';
-  } else if (player === 1) {
-    cell.style.backgroundColor = 'blue';
   } else {
-    cell.style.backgroundColor = 'grey';
+    cell.style.backgroundColor = 'blue';
   }
 };
 
@@ -86,6 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // ? if no has played yet
         // ? set the player as `playerCurr`
         if (playerCurr === null) {
+          // * emit a socket for 1st move
+          // * to set color
+          socket.emit('init', username);
           playerCurr = username;
           socket.emit('move', username);
           playMoves(id);
@@ -120,6 +121,10 @@ document.addEventListener('DOMContentLoaded', () => {
     playerCurr = name;
     chatFeed.value =
       chatFeed.value + `🎮 ${name.toUpperCase()}: played a move.` + '\n';
+  });
+
+  socket.on('init', (name) => {
+    redPlayer = name;
   });
 
   socket.on('connect', () => {
