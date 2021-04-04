@@ -110,3 +110,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = '/';
   });
 });
+
+// theme stuff here
+
+const themeSelect = document.querySelector('#theme-select');
+themeSelect.addEventListener('change', (e) => {
+  const html = document.querySelector('html');
+  html.dataset.theme = `theme-${e.target.value}`;
+});
