@@ -1,6 +1,7 @@
 const board = document.querySelector('#board');
 const chatFeed = document.querySelector('#chat-feed');
 const sendBtn = document.querySelector('#chat-send-btn');
+const leaveBtn = document.querySelector('#leave-chat-btn');
 const chatInput = document.querySelector('#chat-input');
 const usernameField = document.querySelector('#username');
 
@@ -78,45 +79,38 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           cell.style.backgroundColor = 'grey';
         }
-        socket.emit('board', { data: boardData });
+        socket.emit('board', boardData);
       }
     }
   });
 
   socket.on('board', (data) => {
-    boardData = data['data']['data'];
-    renderBoard(boardData);
-    console.log(boardData);
+    renderBoard(data);
   });
 
   socket.on('connect', () => {
-    socket.emit('join');
+    socket.emit('join', `${username} has joined the chat !`);
   });
 
-  socket.on('status', (data) => {
-    chatFeed.value = chatFeed.value + '<' + data.msg + '>\n';
+  socket.on('disconnect', () => {
+    socket.emit('left', `${username} has left  the chat !`);
   });
 
-  socket.on('message', (data) => {
-    console.log('DOES THIS LISTEN TO MESSAGE');
-    console.log(chatFeed.value);
-    console.log(data.msg);
-    chatFeed.value = chatFeed.value + data.msg + '\n';
+  socket.on('status', (msg) => {
+    chatFeed.value = chatFeed.value + '<' + msg + '>\n';
   });
 
-  sendBtn.addEventListener('click', (element) => {
-    console.log('Click Works');
-    const msgVal = chatInput.value;
-    console.log(msgVal);
+  socket.on('message', (msg) => {
+    chatFeed.value = chatFeed.value + `${username}: ${msg}` + '\n';
+  });
+
+  sendBtn.addEventListener('click', () => {
+    socket.emit('text', chatInput.value);
     chatInput.value = '';
-    socket.emit('text', { msg: msgVal });
+  });
+
+  leaveBtn.addEventListener('click', () => {
+    socket.emit('left', `${username} has left the chat !`);
+    window.location.href = '/';
   });
 });
-
-function leave_room() {
-  socket.emit('left', {}, function () {
-    socket.disconnect();
-    // go back to the login page
-    window.location.href = "{{ url_for('index') }}";
-  });
-}

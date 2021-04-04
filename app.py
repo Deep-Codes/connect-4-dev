@@ -23,47 +23,6 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/chat', methods=['GET', 'POST'])
-def chat():
-    if request.method == 'POST':
-        username = request.form['username']
-        room = request.form['room']
-        session['username'] = username
-        session['room'] = room
-        return render_template('game.html', session=session)
-    else:
-        if session.get('username') is not None:
-            return render_template('game.html', session=session)
-        else:
-            return redirect(url_for('index'))
-
-
-@socketio.on('join', namespace='/game')
-def join():
-    room = session.get('room')
-    session.clear()
-    join_room(room)
-    emit('status', {'msg': session.get('username') +
-                    ' has entered the room.'}, room=room)
-
-
-@socketio.on('text', namespace='/game')
-def text(message):
-    print('DOES THIS MESSAGE COME')
-    room = session.get('room')
-    emit('message', {'msg': session.get('username') +
-                     ' : ' + message['msg']}, room=room, broadcast=True)
-
-
-@socketio.on('left', namespace='/game')
-def left(message):
-    room = session.get('room')
-    username = session.get('username')
-    leave_room(room)
-    session.clear()
-    emit('status', {'msg': username + ' has left the room.'}, room=room)
-
-
 @app.route('/game', methods=['GET', 'POST'])
 def game():
     return render_template('game.html')
@@ -71,7 +30,23 @@ def game():
 
 @socketio.on('board', namespace='/game')
 def board(dt):
-    emit('board', {'data': dt}, broadcast=True)
+    emit('board', dt, broadcast=True)
+
+
+@socketio.on('join', namespace='/game')
+def join(msg):
+    print('DISCONNECTTTTTTT     TTTTT')
+    emit('status', msg, broadcast=True)
+
+
+@socketio.on('text', namespace='/game')
+def text(msg):
+    emit('message', msg, broadcast=True)
+
+
+@socketio.on('left', namespace='/game')
+def left(msg):
+    emit('status', msg, broadcast=True)
 
 
 if __name__ == '__main__':
