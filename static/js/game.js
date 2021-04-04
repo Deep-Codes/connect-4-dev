@@ -7,8 +7,8 @@ const board = document.querySelector('#board');
 //   })
 // );
 
-let boardData = [...Array(8)].map(() =>
-  Array(8).fill({ player: null, value: null })
+let boardData = [...Array(6)].map(() =>
+  Array(7).fill({ player: null, value: null })
 );
 
 const renderBoard = (dt) => {
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const col = id[2];
         let fillRowNo;
         let bool = false;
-        for (let c = 7; c >= 0; c--) {
+        for (let c = 5; c >= 0; c--) {
           if (boardData[c][col].value === null && !bool) {
             fillRowNo = c;
             bool = true;
