@@ -7,16 +7,12 @@
   <title>Home | Connect-4</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/affinity-css@latest/css/index.css">
   <link rel="stylesheet" href="/static/css/index.css">
-  <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.1/socket.io.js"></script>
 </head>
 <body class="page">
     <h1 class="mt-5">Hello World</h1>
-    <form action="{{url_for('chat')}}" method="POST">
-      <div class="form-ctx">
-          <input type="text" class="mt-5"  name="username"  placeholder="Username" autocomplete="off" required autofocus>
-          <input type="text" class="mt-5" name="room" placeholder="Room" autocomplete="off" required>
-          <button value="submit" class="mt-5">Start Chat</button>
-      </div> 
-  </form>
+    <form class="form-ctx" action="/game">
+      <input type="text" class="mt-5"  name="username"  placeholder="Username" autocomplete="off" required autofocus>
+      <button type="submit" class="mt-5">Submit</button>
+    </form>
 </body>
 </html>

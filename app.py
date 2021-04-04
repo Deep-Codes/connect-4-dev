@@ -30,10 +30,10 @@ def chat():
         room = request.form['room']
         session['username'] = username
         session['room'] = room
-        return render_template('chat.html', session=session)
+        return render_template('game.html', session=session)
     else:
         if session.get('username') is not None:
-            return render_template('chat.html', session=session)
+            return render_template('game.html', session=session)
         else:
             return redirect(url_for('index'))
 
@@ -41,6 +41,7 @@ def chat():
 @socketio.on('join', namespace='/game')
 def join():
     room = session.get('room')
+    session.clear()
     join_room(room)
     emit('status', {'msg': session.get('username') +
                     ' has entered the room.'}, room=room)

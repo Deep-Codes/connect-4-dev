@@ -7,7 +7,11 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/affinity-css@latest/css/index.css">
   <link rel="stylesheet" href="/static/css/index.css">
   <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.1/socket.io.js"></script>
-  <title>Connect-4</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.6/qs.min.js" integrity="sha512-3TmPrquYLaAsUmZKXRARTDC5siWhLAdBVqNo4dWpDABBtLU62AaoTaQJEvjxjExcZYurO6i1dnK85k8pPIBlRg==" crossorigin="anonymous"></script>
+</body>
+</html>
+
+  <title>Game | Connect-4</title>
 </head>
 <body class="page">
   <h2 class="mt-5">Connect-4</h2>
@@ -15,7 +19,7 @@
     <div id="board" class="mt-10">
     </div>
     <div class="ml-10">
-      <h4>Room : {{ session['room'] }}</h4>
+      <h4 id="username"></h4>
       <textarea id="chat-feed" cols="50" rows="10" placeholder="No messages yet" readonly></textarea>
       <input type="text" class="w-100 mt-5" id="chat-input" placeholder="Enter your message here" />
       <div>

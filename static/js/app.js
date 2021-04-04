@@ -2,6 +2,7 @@ const board = document.querySelector('#board');
 const chatFeed = document.querySelector('#chat-feed');
 const sendBtn = document.querySelector('#chat-send-btn');
 const chatInput = document.querySelector('#chat-input');
+const usernameField = document.querySelector('#username');
 
 // let data = [...Array(8)].map(() =>
 //   Array(8).fill({
@@ -9,6 +10,12 @@ const chatInput = document.querySelector('#chat-input');
 //     value: Math.floor(Math.random() * 2),
 //   })
 // );
+
+const { username } = Qs.parse(location.search, {
+  ignoreQueryPrefix: true,
+});
+
+usernameField.innerHTML = `Welcome ${username}`;
 
 let boardData = [...Array(6)].map(() =>
   Array(7).fill({ player: null, value: null })
