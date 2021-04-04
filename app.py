@@ -38,7 +38,7 @@ def chat():
             return redirect(url_for('index'))
 
 
-@socketio.on('join', namespace='/chat')
+@socketio.on('join', namespace='/game')
 def join():
     room = session.get('room')
     join_room(room)
@@ -46,14 +46,15 @@ def join():
                     ' has entered the room.'}, room=room)
 
 
-@socketio.on('text', namespace='/chat')
+@socketio.on('text', namespace='/game')
 def text(message):
+    print('DOES THIS MESSAGE COME')
     room = session.get('room')
     emit('message', {'msg': session.get('username') +
-                     ' : ' + message['msg']}, room=room)
+                     ' : ' + message['msg']}, room=room, broadcast=True)
 
 
-@socketio.on('left', namespace='/chat')
+@socketio.on('left', namespace='/game')
 def left(message):
     room = session.get('room')
     username = session.get('username')
@@ -67,7 +68,7 @@ def game():
     return render_template('game.html')
 
 
-@socketio.on('board', namespace='/')
+@socketio.on('board', namespace='/game')
 def board(dt):
     emit('board', {'data': dt}, broadcast=True)
 

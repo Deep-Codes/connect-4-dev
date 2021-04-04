@@ -16,10 +16,10 @@
     </div>
     <div class="ml-10">
       <h4>Room : {{ session['room'] }}</h4>
-      <textarea id="chat"cols="50" rows="10" placeholder="No messages yet" readonly></textarea>
-      <input type="text" class="w-100 mt-5" id="text" placeholder="Enter your message here" />
+      <textarea id="chat-feed" cols="50" rows="10" placeholder="No messages yet" readonly></textarea>
+      <input type="text" class="w-100 mt-5" id="chat-input" placeholder="Enter your message here" />
       <div>
-        <button type="button" class="mt-5" id="send">Send</button>
+        <button type="button" class="mt-5" id="chat-send-btn">Send</button>
         <button type="button" class="mt-5" onclick="leave_room()">
           Leave this Chat
         </button>
@@ -27,6 +27,6 @@
     </div>
   </div>
   
-  <script src="../static/js/game.js"></script>
+  <script src="../static/js/app.js"></script>
 </body>
 </html>
