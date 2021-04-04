@@ -33,6 +33,11 @@ def board(dt):
     emit('board', dt, broadcast=True)
 
 
+@socketio.on('move', namespace='/game')
+def move(name):
+    emit('move', name, broadcast=True)
+
+
 @socketio.on('join', namespace='/game')
 def join(msg):
     print('DISCONNECTTTTTTT     TTTTT')

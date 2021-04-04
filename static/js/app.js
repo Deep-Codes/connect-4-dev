@@ -4,6 +4,7 @@ const sendBtn = document.querySelector('#chat-send-btn');
 const leaveBtn = document.querySelector('#leave-chat-btn');
 const chatInput = document.querySelector('#chat-input');
 const usernameField = document.querySelector('#username');
+let playerCurr = null;
 
 // let data = [...Array(8)].map(() =>
 //   Array(8).fill({
@@ -49,6 +50,28 @@ const renderBoard = (dt) => {
 
 renderBoard(boardData);
 
+const playMoves = (id) => {
+  const col = id[2];
+  let fillRowNo;
+  let bool = false;
+  for (let c = 5; c >= 0; c--) {
+    if (boardData[c][col].value === null && !bool) {
+      fillRowNo = c;
+      bool = true;
+    }
+  }
+  const player = Math.floor(Math.random() * 2) + 1;
+  boardData[fillRowNo][[id[2]]] = { player, value: 1 };
+  const cell = document.querySelector(`#${id}`);
+  if (player === 2) {
+    cell.style.backgroundColor = 'red';
+  } else if (player === 1) {
+    cell.style.backgroundColor = 'blue';
+  } else {
+    cell.style.backgroundColor = 'grey';
+  }
+};
+
 let socket;
 document.addEventListener('DOMContentLoaded', () => {
   socket = io.connect(
@@ -60,32 +83,43 @@ document.addEventListener('DOMContentLoaded', () => {
       const id = e.target.id;
       // avoid re selecting the cell
       if (boardData[id[1]][[id[2]]].value === null) {
-        const col = id[2];
-        let fillRowNo;
-        let bool = false;
-        for (let c = 5; c >= 0; c--) {
-          if (boardData[c][col].value === null && !bool) {
-            fillRowNo = c;
-            bool = true;
+        // ? if no has played yet
+        // ? set the player as `playerCurr`
+        if (playerCurr === null) {
+          playerCurr = username;
+          socket.emit('move', username);
+          playMoves(id);
+          socket.emit('board', boardData);
+        } else {
+          // ? if atleast 1 player has played
+          // ? don't let the `playerCurr play`
+          if (playerCurr === username) {
+            // ! no moves played
+          }
+          // ? let the other user play
+          // ? set that player as `playerCurr`
+          else {
+            playerCurr = username;
+            socket.emit('move', username);
+            playMoves(id);
+            socket.emit('board', boardData);
           }
         }
-        const player = Math.floor(Math.random() * 2) + 1;
-        boardData[fillRowNo][[id[2]]] = { player, value: 1 };
-        const cell = document.querySelector(`#${id}`);
-        if (player === 2) {
-          cell.style.backgroundColor = 'red';
-        } else if (player === 1) {
-          cell.style.backgroundColor = 'blue';
-        } else {
-          cell.style.backgroundColor = 'grey';
-        }
-        socket.emit('board', boardData);
       }
     }
   });
 
   socket.on('board', (data) => {
+    // * update the state
+    // * or the game will plahy it's own game over
+    boardData = data;
     renderBoard(data);
+  });
+
+  socket.on('move', (name) => {
+    playerCurr = name;
+    chatFeed.value =
+      chatFeed.value + `🎮 ${name.toUpperCase()}: played a move.` + '\n';
   });
 
   socket.on('connect', () => {
@@ -101,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   sendBtn.addEventListener('click', () => {
-    socket.emit('text', `${username.toUpperCase()}: ${chatInput.value}`);
+    socket.emit('text', `💬 ${username.toUpperCase()}: ${chatInput.value}`);
     chatInput.value = '';
   });
 
