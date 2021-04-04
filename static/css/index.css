@@ -1,3 +1,11 @@
+.row-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.w-100 {
+  width: 300px;
+}
 .page {
   max-width: 760px;
   display: flex;
