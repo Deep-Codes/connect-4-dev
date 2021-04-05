@@ -83,7 +83,10 @@ function checkWinner(one, two, three, four) {
   );
 }
 
-let computeWinner = () => {
+const xCompute = () => {
+  let bool = false;
+  let rowV = null;
+  let colV = null;
   for (let row = 0; row < 6; row++) {
     for (let col = 0; col < 4; col++) {
       if (
@@ -94,20 +97,71 @@ let computeWinner = () => {
           document.querySelector(`#c${row}${col + 3}`).style.backgroundColor
         )
       ) {
-        if (
-          document.querySelector(`#c${row}${col}`).style.backgroundColor ===
-          'red'
-        ) {
-          console.log('We have a Winner');
-          chatFeed.value =
-            chatFeed.value +
-            `🎉 ${redPlayer.toUpperCase()}: has WON !!! .` +
-            '\n';
-        } else {
-          chatFeed.value =
-            chatFeed.value + `🎉 'Blue Player : has WON !!! .` + '\n';
-        }
+        bool = true;
+        rowV = row;
+        colV = col;
       }
+    }
+  }
+  return {
+    bool,
+    row: rowV,
+    col: colV,
+  };
+};
+
+const yCompute = () => {
+  let bool = false;
+  let rowV = null;
+  let colV = null;
+  for (let col = 0; col <= 6; col++) {
+    for (let row = 0; row < 3; row++) {
+      if (
+        checkWinner(
+          document.querySelector(`#c${row}${col}`).style.backgroundColor,
+          document.querySelector(`#c${row + 1}${col}`).style.backgroundColor,
+          document.querySelector(`#c${row + 2}${col}`).style.backgroundColor,
+          document.querySelector(`#c${row + 3}${col}`).style.backgroundColor
+        )
+      ) {
+        bool = true;
+        rowV = row;
+        colV = col;
+      }
+    }
+  }
+  return {
+    bool,
+    row: rowV,
+    col: colV,
+  };
+};
+
+let computeWinner = () => {
+  let row;
+  let col;
+  const xComp = xCompute();
+  const yComp = yCompute();
+  if (xComp.bool) {
+    row = xComp.row;
+    col = xComp.col;
+  }
+  if (yComp.bool) {
+    row = yComp.row;
+    col = yComp.col;
+  }
+  if (xComp.bool || yComp.bool) {
+    if (
+      document.querySelector(`#c${row}${col}`).style.backgroundColor === 'red'
+    ) {
+      console.log('We have a Winner');
+      chatFeed.value =
+        chatFeed.value + `🎉 ${redPlayer.toUpperCase()}: has WON !!! .` + '\n';
+    } else if (
+      document.querySelector(`#c${row}${col}`).style.backgroundColor === 'blue'
+    ) {
+      chatFeed.value =
+        chatFeed.value + `🎉 'Blue Player : has WON !!! .` + '\n';
     }
   }
 };
