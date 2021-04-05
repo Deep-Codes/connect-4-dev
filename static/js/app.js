@@ -60,13 +60,55 @@ const playMoves = (id) => {
       bool = true;
     }
   }
-
-  boardData[fillRowNo][[id[2]]] = { player: playerCurr, value: 1 };
+  if (playerCurr === redPlayer) {
+    boardData[fillRowNo][[id[2]]] = { player: playerCurr, value: 1 };
+  } else {
+    boardData[fillRowNo][[id[2]]] = { player: playerCurr, value: 0 };
+  }
   const cell = document.querySelector(`#${id}`);
   if (playerCurr === redPlayer) {
     cell.style.backgroundColor = 'red';
   } else {
     cell.style.backgroundColor = 'blue';
+  }
+};
+
+function checkWinner(one, two, three, four) {
+  return (
+    one === two &&
+    one === three &&
+    one === four &&
+    one !== '' &&
+    one !== undefined
+  );
+}
+
+let computeWinner = () => {
+  for (let row = 0; row < 6; row++) {
+    for (let col = 0; col < 4; col++) {
+      if (
+        checkWinner(
+          document.querySelector(`#c${row}${col}`).style.backgroundColor,
+          document.querySelector(`#c${row}${col + 1}`).style.backgroundColor,
+          document.querySelector(`#c${row}${col + 2}`).style.backgroundColor,
+          document.querySelector(`#c${row}${col + 3}`).style.backgroundColor
+        )
+      ) {
+        if (
+          document.querySelector(`#c${row}${col}`).style.backgroundColor ===
+          'red'
+        ) {
+          console.log('We have a Winner');
+          chatFeed.value =
+            chatFeed.value +
+            `🎉 ${redPlayer.toUpperCase()}: has WON !!! .` +
+            '\n';
+        } else {
+          chatFeed.value =
+            chatFeed.value + `🎉 'Blue Player : has WON !!! .` + '\n';
+        }
+      }
+    }
   }
 };
 
@@ -91,6 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
           socket.emit('move', username);
           playMoves(id);
           socket.emit('board', boardData);
+          computeWinner();
         } else {
           // ? if atleast 1 player has played
           // ? don't let the `playerCurr play`
@@ -115,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // * or the game will plahy it's own game over
     boardData = data;
     renderBoard(data);
+    computeWinner(boardData);
   });
 
   socket.on('move', (name) => {
