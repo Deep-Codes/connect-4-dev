@@ -137,11 +137,71 @@ const yCompute = () => {
   };
 };
 
+const diagCompute1 = () => {
+  let bool = false;
+  let rowV = null;
+  let colV = null;
+  for (let col = 0; col < 4; col++) {
+    for (let row = 0; row < 3; row++) {
+      if (
+        checkWinner(
+          document.querySelector(`#c${row}${col}`).style.backgroundColor,
+          document.querySelector(`#c${row + 1}${col + 1}`).style
+            .backgroundColor,
+          document.querySelector(`#c${row + 2}${col + 2}`).style
+            .backgroundColor,
+          document.querySelector(`#c${row + 3}${col + 3}`).style.backgroundColor
+        )
+      ) {
+        bool = true;
+        rowV = row;
+        colV = col;
+      }
+    }
+  }
+  return {
+    bool,
+    row: rowV,
+    col: colV,
+  };
+};
+
+const diagCompute2 = () => {
+  let bool = false;
+  let rowV = null;
+  let colV = null;
+  for (let col = 0; col < 4; col++) {
+    for (let row = 5; row > 2; row--) {
+      if (
+        checkWinner(
+          document.querySelector(`#c${row}${col}`).style.backgroundColor,
+          document.querySelector(`#c${row - 1}${col + 1}`).style
+            .backgroundColor,
+          document.querySelector(`#c${row - 2}${col + 2}`).style
+            .backgroundColor,
+          document.querySelector(`#c${row - 3}${col + 3}`).style.backgroundColor
+        )
+      ) {
+        bool = true;
+        rowV = row;
+        colV = col;
+      }
+    }
+  }
+  return {
+    bool,
+    row: rowV,
+    col: colV,
+  };
+};
+
 let computeWinner = () => {
   let row;
   let col;
   const xComp = xCompute();
   const yComp = yCompute();
+  const diagComp1 = diagCompute1();
+  const diagComp2 = diagCompute2();
   if (xComp.bool) {
     row = xComp.row;
     col = xComp.col;
@@ -150,11 +210,18 @@ let computeWinner = () => {
     row = yComp.row;
     col = yComp.col;
   }
-  if (xComp.bool || yComp.bool) {
+  if (diagComp1.bool) {
+    row = diagComp1.row;
+    col = diagComp1.col;
+  }
+  if (diagComp2.bool) {
+    row = diagComp2.row;
+    col = diagComp2.col;
+  }
+  if (xComp.bool || yComp.bool || diagComp1.bool || diagComp2.bool) {
     if (
       document.querySelector(`#c${row}${col}`).style.backgroundColor === 'red'
     ) {
-      console.log('We have a Winner');
       chatFeed.value =
         chatFeed.value + `🎉 ${redPlayer.toUpperCase()}: has WON !!! .` + '\n';
     } else if (
