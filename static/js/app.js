@@ -329,5 +329,6 @@ document.addEventListener('DOMContentLoaded', () => {
 const themeSelect = document.querySelector('#theme-select');
 themeSelect.addEventListener('change', (e) => {
   const html = document.querySelector('html');
+  document.querySelector('#logo').src = `/static/${e.target.value}.svg`;
   html.dataset.theme = `theme-${e.target.value}`;
 });

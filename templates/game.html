@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/affinity-css@latest/css/index.css">
   <link rel="stylesheet" href="/static/css/index.css">
+  <link rel="shortcut icon" href="/static/dark.svg" type="image/x-icon">
   <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.1/socket.io.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.6/qs.min.js" integrity="sha512-3TmPrquYLaAsUmZKXRARTDC5siWhLAdBVqNo4dWpDABBtLU62AaoTaQJEvjxjExcZYurO6i1dnK85k8pPIBlRg==" crossorigin="anonymous"></script>
 </body>
@@ -13,7 +14,10 @@
 </head>
 <body class="page">
   <nav class="pl-10 pr-5">
-    <h2 class="mt-5">Connect-4</h2>
+    <h2 class="mt-5 flex-center">
+      Connect
+      <img id="logo" class="ml-2" src="/static/dark.svg" width="40" alt="">
+    </h2>
     <select name="" id="theme-select">
       <option value="dark">Dark</option>
       <option value="light">Light</option>
