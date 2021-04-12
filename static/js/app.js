@@ -18,7 +18,6 @@ let winState = false;
 const { username, room } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
 });
-console.log(room);
 
 let boardData = [...Array(6)].map(() =>
   Array(7).fill({ player: null, value: null })
@@ -245,7 +244,7 @@ const scrollUpChatFeed = () => {
 let socket;
 document.addEventListener('DOMContentLoaded', () => {
   socket = io.connect(
-    'http://' + document.domain + ':' + location.port + '/game'
+    'https://' + document.domain + ':' + location.port + '/game'
   );
 
   board.addEventListener('click', (e) => {
