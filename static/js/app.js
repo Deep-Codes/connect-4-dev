@@ -233,6 +233,13 @@ let computeWinner = () => {
   }
 };
 
+const scrollUpChatFeed = () => {
+  document.getElementById('chat-feed').scrollTop = document.getElementById(
+    'chat-feed'
+  ).scrollHeight;
+  console.log(document.getElementById('chat-feed'));
+};
+
 let socket;
 document.addEventListener('DOMContentLoaded', () => {
   socket = io.connect(
@@ -244,6 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const id = e.target.id;
       // avoid re selecting the cell
       if (boardData[id[1]][[id[2]]].value === null) {
+        scrollUpChatFeed();
         // ? if no has played yet
         // ? set the player as `playerCurr`
         if (playerCurr === null) {
@@ -305,6 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   sendBtn.addEventListener('click', () => {
+    scrollUpChatFeed();
     socket.emit('text', `💬 ${username.toUpperCase()}: ${chatInput.value}`);
     chatInput.value = '';
   });
