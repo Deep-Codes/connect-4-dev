@@ -7,6 +7,7 @@ const usernameField = document.querySelector('#username');
 let playerCurr = null;
 let bluePlayer = null;
 let redPlayer = null;
+let winState = false;
 
 // let data = [...Array(8)].map(() =>
 //   Array(8).fill({
@@ -222,13 +223,17 @@ let computeWinner = () => {
     if (
       document.querySelector(`#c${row}${col}`).style.backgroundColor === 'red'
     ) {
+      winState = true;
       chatFeed.value =
         chatFeed.value + `🎉 ${redPlayer.toUpperCase()}: has WON !!! .` + '\n';
     } else if (
       document.querySelector(`#c${row}${col}`).style.backgroundColor === 'blue'
     ) {
+      winState = true;
       chatFeed.value =
-        chatFeed.value + `🎉 'Blue Player : has WON !!! .` + '\n';
+        chatFeed.value +
+        `🎉 ${playerCurr.toUpperCase()} : has WON !!! .` +
+        '\n';
     }
   }
 };
@@ -237,7 +242,6 @@ const scrollUpChatFeed = () => {
   document.getElementById('chat-feed').scrollTop = document.getElementById(
     'chat-feed'
   ).scrollHeight;
-  console.log(document.getElementById('chat-feed'));
 };
 
 let socket;
@@ -247,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
   );
 
   board.addEventListener('click', (e) => {
-    if (e.target.className === 'cell') {
+    if (e.target.className === 'cell' && !winState) {
       const id = e.target.id;
       // avoid re selecting the cell
       if (boardData[id[1]][[id[2]]].value === null) {
