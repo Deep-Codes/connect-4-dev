@@ -3,7 +3,6 @@ const chatFeed = document.querySelector('#chat-feed');
 const sendBtn = document.querySelector('#chat-send-btn');
 const leaveBtn = document.querySelector('#leave-chat-btn');
 const chatInput = document.querySelector('#chat-input');
-const usernameField = document.querySelector('#username');
 let playerCurr = null;
 let bluePlayer = null;
 let redPlayer = null;
@@ -16,11 +15,10 @@ let winState = false;
 //   })
 // );
 
-const { username } = Qs.parse(location.search, {
+const { username, room } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
 });
-
-usernameField.innerHTML = `👋🏽 Welcome ${username.toUpperCase()} !`;
+console.log(room);
 
 let boardData = [...Array(6)].map(() =>
   Array(7).fill({ player: null, value: null })
@@ -305,11 +303,16 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   socket.on('connect', () => {
-    socket.emit('join', `🚀 ${username.toUpperCase()} has joined the chat `);
+    socket.emit('join', {
+      text: `🚀 ${username.toUpperCase()} has joined the chat `,
+      room: room,
+    });
   });
 
   socket.on('status', (msg) => {
-    chatFeed.value = chatFeed.value + msg + '\n';
+    if (msg.room === room) {
+      chatFeed.value = chatFeed.value + msg.text + '\n';
+    }
   });
 
   socket.on('message', (msg) => {

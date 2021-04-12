@@ -45,7 +45,6 @@ def init(name):
 
 @socketio.on('join', namespace='/game')
 def join(msg):
-    print('DISCONNECTTTTTTT     TTTTT')
     emit('status', msg, broadcast=True)
 
 
