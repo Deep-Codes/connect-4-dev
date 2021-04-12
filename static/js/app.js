@@ -3,10 +3,10 @@ const chatFeed = document.querySelector('#chat-feed');
 const sendBtn = document.querySelector('#chat-send-btn');
 const leaveBtn = document.querySelector('#leave-chat-btn');
 const chatInput = document.querySelector('#chat-input');
-const usernameField = document.querySelector('#username');
 let playerCurr = null;
 let bluePlayer = null;
 let redPlayer = null;
+let winState = false;
 
 // let data = [...Array(8)].map(() =>
 //   Array(8).fill({
@@ -15,11 +15,10 @@ let redPlayer = null;
 //   })
 // );
 
-const { username } = Qs.parse(location.search, {
+const { username, room } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
 });
-
-usernameField.innerHTML = `👋🏽 Welcome ${username.toUpperCase()} !`;
+console.log(room);
 
 let boardData = [...Array(6)].map(() =>
   Array(7).fill({ player: null, value: null })
@@ -222,13 +221,17 @@ let computeWinner = () => {
     if (
       document.querySelector(`#c${row}${col}`).style.backgroundColor === 'red'
     ) {
+      winState = true;
       chatFeed.value =
         chatFeed.value + `🎉 ${redPlayer.toUpperCase()}: has WON !!! .` + '\n';
     } else if (
       document.querySelector(`#c${row}${col}`).style.backgroundColor === 'blue'
     ) {
+      winState = true;
       chatFeed.value =
-        chatFeed.value + `🎉 'Blue Player : has WON !!! .` + '\n';
+        chatFeed.value +
+        `🎉 ${playerCurr.toUpperCase()} : has WON !!! .` +
+        '\n';
     }
   }
 };
@@ -237,7 +240,6 @@ const scrollUpChatFeed = () => {
   document.getElementById('chat-feed').scrollTop = document.getElementById(
     'chat-feed'
   ).scrollHeight;
-  console.log(document.getElementById('chat-feed'));
 };
 
 let socket;
@@ -247,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
   );
 
   board.addEventListener('click', (e) => {
-    if (e.target.className === 'cell') {
+    if (e.target.className === 'cell' && !winState) {
       const id = e.target.id;
       // avoid re selecting the cell
       if (boardData[id[1]][[id[2]]].value === null) {
@@ -257,11 +259,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (playerCurr === null) {
           // * emit a socket for 1st move
           // * to set color
-          socket.emit('init', username);
+          socket.emit('init', {
+            username,
+            room,
+          });
           playerCurr = username;
-          socket.emit('move', username);
+          socket.emit('move', {
+            username,
+            room,
+          });
           playMoves(id);
-          socket.emit('board', boardData);
+          socket.emit('board', {
+            data: boardData,
+            room,
+          });
           computeWinner();
         } else {
           // ? if atleast 1 player has played
@@ -273,9 +284,15 @@ document.addEventListener('DOMContentLoaded', () => {
           // ? set that player as `playerCurr`
           else {
             playerCurr = username;
-            socket.emit('move', username);
+            socket.emit('move', {
+              username,
+              room,
+            });
             playMoves(id);
-            socket.emit('board', boardData);
+            socket.emit('board', {
+              data: boardData,
+              room,
+            });
           }
         }
       }
@@ -285,47 +302,67 @@ document.addEventListener('DOMContentLoaded', () => {
   socket.on('board', (data) => {
     // * update the state
     // * or the game will plahy it's own game over
-    boardData = data;
-    renderBoard(data);
-    computeWinner(boardData);
+    if (data.room === room) {
+      boardData = data.data;
+      renderBoard(boardData);
+      computeWinner(boardData);
+    }
   });
 
-  socket.on('move', (name) => {
-    playerCurr = name;
-    chatFeed.value =
-      chatFeed.value + `🎮 ${name.toUpperCase()}: played a move.` + '\n';
+  socket.on('move', (data) => {
+    if (data.room === room) {
+      playerCurr = data.username;
+      chatFeed.value =
+        chatFeed.value +
+        `🎮 ${playerCurr.toUpperCase()}: played a move.` +
+        '\n';
+    }
   });
 
-  socket.on('init', (name) => {
-    redPlayer = name;
+  socket.on('init', (data) => {
+    if (data.room === room) {
+      redPlayer = data.username;
+    }
   });
 
   socket.on('connect', () => {
-    socket.emit('join', `🚀 ${username.toUpperCase()} has joined the chat `);
+    socket.emit('join', {
+      text: `🚀 ${username.toUpperCase()} has joined the chat `,
+      room: room,
+    });
   });
 
   socket.on('status', (msg) => {
-    chatFeed.value = chatFeed.value + msg + '\n';
+    if (msg.room === room) {
+      chatFeed.value = chatFeed.value + msg.text + '\n';
+    }
   });
 
   socket.on('message', (msg) => {
-    chatFeed.value = chatFeed.value + msg + '\n';
+    if (msg.room === room) {
+      chatFeed.value = chatFeed.value + msg.text + '\n';
+    }
   });
 
   sendBtn.addEventListener('click', () => {
     scrollUpChatFeed();
-    socket.emit('text', `💬 ${username.toUpperCase()}: ${chatInput.value}`);
+    socket.emit('text', {
+      text: `💬 ${username.toUpperCase()}: ${chatInput.value}`,
+      room: room,
+    });
     chatInput.value = '';
   });
 
   leaveBtn.addEventListener('click', () => {
-    socket.emit('left', `💀 ${username.toUpperCase()} has left the chat `);
+    socket.emit('left', {
+      text: `💀 ${username.toUpperCase()} has left the chat `,
+      room: room,
+    });
     window.location.href = '/';
   });
 });
 
 // theme stuff here
-
 const themeSelect = document.querySelector('#theme-select');
 themeSelect.addEventListener('change', (e) => {
   const html = document.querySelector('html');
