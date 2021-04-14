@@ -2,6 +2,7 @@ const board = document.querySelector('#board');
 const chatFeed = document.querySelector('#chat-feed');
 const sendBtn = document.querySelector('#chat-send-btn');
 const leaveBtn = document.querySelector('#leave-chat-btn');
+const restartBtn = document.querySelector('#restart-btn');
 const chatInput = document.querySelector('#chat-input');
 const audio = document.querySelector('#audio');
 let playerCurr = null;
@@ -220,6 +221,24 @@ let computeWinner = () => {
   if (xComp.bool || yComp.bool || diagComp1.bool || diagComp2.bool) {
     audio.src = "./static/media/win.mp3";
     audio.play();
+    restartBtn.classList.remove('disabled');
+    restartBtn.addEventListener("click", () => {
+      boardData = [...Array(6)].map(() =>
+        Array(7).fill({ player: null, value: null })
+      );
+      renderBoard(boardData);
+      socket.emit('board', {
+        data: boardData,
+        room,
+      });
+      socket.emit('join', {
+        text: `🚀 Restarting Game `,
+        room: room,
+      });
+      winState = false;
+      audio.src = "./static/media/drop.mp3";
+      console.log("Restarting Game");
+    })
     if (
       document.querySelector(`#c${row}${col}`).style.backgroundColor === 'red'
     ) {
@@ -247,7 +266,7 @@ const scrollUpChatFeed = () => {
 let socket;
 document.addEventListener('DOMContentLoaded', () => {
   socket = io.connect(
-    'https://' + document.domain + ':' + location.port + '/game'
+    'http://' + document.domain + ':' + location.port + '/game'
   );
 
   board.addEventListener('click', (e) => {
