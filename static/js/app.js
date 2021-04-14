@@ -3,6 +3,7 @@ const chatFeed = document.querySelector('#chat-feed');
 const sendBtn = document.querySelector('#chat-send-btn');
 const leaveBtn = document.querySelector('#leave-chat-btn');
 const chatInput = document.querySelector('#chat-input');
+const audio = document.querySelector('#audio');
 let playerCurr = null;
 let bluePlayer = null;
 let redPlayer = null;
@@ -217,6 +218,8 @@ let computeWinner = () => {
     col = diagComp2.col;
   }
   if (xComp.bool || yComp.bool || diagComp1.bool || diagComp2.bool) {
+    audio.src = "./static/media/win.mp3";
+    audio.play();
     if (
       document.querySelector(`#c${row}${col}`).style.backgroundColor === 'red'
     ) {
@@ -253,6 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // avoid re selecting the cell
       if (boardData[id[1]][[id[2]]].value === null) {
         scrollUpChatFeed();
+        audio.play();
         // ? if no has played yet
         // ? set the player as `playerCurr`
         if (playerCurr === null) {
