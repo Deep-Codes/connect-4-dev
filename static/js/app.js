@@ -219,6 +219,8 @@ let computeWinner = () => {
     col = diagComp2.col;
   }
   if (xComp.bool || yComp.bool || diagComp1.bool || diagComp2.bool) {
+    audio.src = "./static/media/win.mp3";
+    audio.play();
     if (
       document.querySelector(`#c${row}${col}`).style.backgroundColor === 'red'
     ) {
