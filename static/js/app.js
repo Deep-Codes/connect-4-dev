@@ -5,6 +5,7 @@ const leaveBtn = document.querySelector('#leave-chat-btn');
 const restartBtn = document.querySelector('#restart-btn');
 const chatInput = document.querySelector('#chat-input');
 const audio = document.querySelector('#audio');
+const usernameText = document.querySelector('#username');
 let playerCurr = null;
 let bluePlayer = null;
 let redPlayer = null;
@@ -20,6 +21,8 @@ let winState = false;
 const { username, room } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
 });
+
+usernameText.innerHTML = `👋🏽 Welcome ${username}`;
 
 let boardData = [...Array(6)].map(() =>
   Array(7).fill({ player: null, value: null })
@@ -219,10 +222,10 @@ let computeWinner = () => {
     col = diagComp2.col;
   }
   if (xComp.bool || yComp.bool || diagComp1.bool || diagComp2.bool) {
-    audio.src = "./static/media/win.mp3";
+    audio.src = './static/media/win.mp3';
     audio.play();
     restartBtn.classList.remove('disabled');
-    restartBtn.addEventListener("click", () => {
+    restartBtn.addEventListener('click', () => {
       boardData = [...Array(6)].map(() =>
         Array(7).fill({ player: null, value: null })
       );
@@ -232,13 +235,10 @@ let computeWinner = () => {
         room,
       });
       socket.emit('join', {
-        text: `🚀 Restarting Game `,
+        text: ``,
         room: room,
       });
-      winState = false;
-      audio.src = "./static/media/drop.mp3";
-      console.log("Restarting Game");
-    })
+    });
     if (
       document.querySelector(`#c${row}${col}`).style.backgroundColor === 'red'
     ) {
@@ -255,6 +255,16 @@ let computeWinner = () => {
         '\n';
     }
   }
+};
+
+const restartGame = () => {
+  winState = false;
+  playerCurr = null;
+  bluePlayer = null;
+  redPlayer = null;
+  restartBtn.classList.add('disabled');
+  audio.src = './static/media/drop.mp3';
+  chatFeed.value = chatFeed.value + `🛠 Restarting Game !!! .` + '\n';
 };
 
 const scrollUpChatFeed = () => {
@@ -356,7 +366,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   socket.on('status', (msg) => {
     if (msg.room === room) {
-      chatFeed.value = chatFeed.value + msg.text + '\n';
+      if (msg.text === '') {
+        restartGame();
+      } else {
+        chatFeed.value = chatFeed.value + msg.text + '\n';
+      }
     }
   });
 
