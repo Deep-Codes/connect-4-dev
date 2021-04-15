@@ -5,6 +5,7 @@ import smtplib #for sending mail / automation
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
+slurs = ['fuck', 'bitch' , 'cunt' , 'ass' , 'arse' , 'dumbfuck' , 'motherfucker' , 'dick' , 'titties' , 'thekku' , 'boobs' , 'vagina' , 'shite' , 'wank' , 'shit' , 'porn' , 'chutiya' , 'bc' , 'madarchod' , 'lodu' , 'randi' , 'nigga' , 'nigger']
 
 # FLASK_APP = app.py
 # FLASK_ENV = development
@@ -54,8 +55,10 @@ def join(msg):
 
 @socketio.on('text', namespace='/game')
 def text(msg):
+    for i in slurs:
+        if msg['text'].find(i) != -1 :
+            msg['text'] = msg['text'].replace(i,"*"*len(i))
     emit('message', msg, broadcast=True)
-
 
 @socketio.on('left', namespace='/game')
 def left(msg):
