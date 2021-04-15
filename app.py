@@ -75,21 +75,19 @@ def invite():
         password = 'damk.connect4'
         subject='Invite Link For Connect-4 by ' + player_name
         text='Email Body'
-        to_emails='kaartiknayak2001@gmail.com'
-
 
         html = """\
             <html>
               <head></head>
               <body>
-              <h1>Your have been invited to play Connect4 by one of your friend   """ +str(player_name)+ """ +  </h1>
-              <h2>Heres the link :   """ +str(invite_link) +  """ </h2>
+              <h1>Your have been invited to play Connect4 by one of your friend   """ +str(player_name)+ """</h1>
+              <h2>Heres the link :   """ + str(invite_link) +  """ </h2>
               </body>
             </html>
             """
         msg = MIMEMultipart('alternative')
         msg['From'] = gmail
-        msg['To'] = to_emails
+        msg['To'] = invite_mail
         msg['Subject'] = subject
 
         html_code = MIMEText(html, 'html')
@@ -102,6 +100,7 @@ def invite():
 
         s.sendmail(gmail,invite_mail, message)
         s.quit()
+
     return render_template('invite.html')
 
 #invite-end
