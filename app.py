@@ -1,6 +1,10 @@
 from flask import Flask, render_template, url_for, request, redirect, session
 from flask_socketio import SocketIO, join_room, leave_room, emit
 from flask_session import Session
+import smtplib #for sending mail / automation
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
 
 # FLASK_APP = app.py
 # FLASK_ENV = development
@@ -56,6 +60,50 @@ def text(msg):
 @socketio.on('left', namespace='/game')
 def left(msg):
     emit('status', msg, broadcast=True)
+
+#invite-code
+@app.route('/invite' , methods=['GET', 'POST'])
+def invite():
+    if request.method == "POST":
+        player_name = request.form.get("username").replace(" ", "")
+        player_room = request.form.get("room")
+        invite_name = request.form.get("i-name").replace(" ", "")
+        invite_mail = request.form.get("i-email")
+        invite_link = 'http://localhost:5000/game?username=' + invite_name + '&room=' + player_room
+
+        gmail = 'connect.04.auth@gmail.com'
+        password = 'damk.connect4'
+        subject='Invite Link For Connect-4 by ' + player_name
+        text='Email Body'
+
+        html = """\
+            <html>
+              <head></head>
+              <body>
+              <h1>Your have been invited to play Connect4 by one of your friend   """ +str(player_name)+ """</h1>
+              <h2>Heres the link :   """ + str(invite_link) +  """ </h2>
+              </body>
+            </html>
+            """
+        msg = MIMEMultipart('alternative')
+        msg['From'] = gmail
+        msg['To'] = invite_mail
+        msg['Subject'] = subject
+
+        html_code = MIMEText(html, 'html')
+        msg.attach(html_code)
+        message = msg.as_string()
+
+        s = smtplib.SMTP('smtp.gmail.com', 587)
+        s.starttls()
+        s.login(gmail, password)
+
+        s.sendmail(gmail,invite_mail, message)
+        s.quit()
+
+    return render_template('invite.html')
+
+#invite-end
 
 
 if __name__ == '__main__':
