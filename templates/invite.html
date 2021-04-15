@@ -4,20 +4,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home | Connect-4</title>
+  <title>Invite | Connect-4</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/affinity-css@latest/css/index.css">
   <link rel="stylesheet" href="/static/css/index.css">
   <link rel="shortcut icon" href="/static/dark.svg" type="image/x-icon">
 </head>
 <body class="page">
-    <h1 class="mt-5">Send Invite</h1>
+    <h2 class="mt-5 flex-center">
+      Connect
+      <img id="logo" class="ml-2" src="/static/dark.svg" width="40" alt="">
+    </h2>
     <p class="mt-5">Send invite to your friends and play together!</p>
     <form class="form-ctx" method='POST'>
-      <input type="text" class="mt-5"  name="username"  placeholder="Username"  required autofocus>
+      <input type="text" class="mt-5"  name="username"  placeholder="Your Username"  required autofocus>
       <input type="text" class="mt-5"  name="room"  placeholder="Room"  required autofocus>
-      <input type="text" class="mt-5"  name="i-name"  placeholder="Enter Name"  required autofocus>
-      <input type="text" class="mt-5"  name="i-email"  placeholder="Enter Email"  required autofocus>
+      <input type="text" class="mt-5"  name="i-name"  placeholder="Invite's Name"  required autofocus>
+      <input type="text" class="mt-5"  name="i-email"  placeholder="Invite's Email"  required autofocus>
       <button type="submit" class="mt-5">Submit</button>
     </form>
+    <button class="mt-5">
+      <a href="/" style="color:white;">Home</a>
+    </button>
 </body>
 </html>

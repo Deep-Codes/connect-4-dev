@@ -111,6 +111,7 @@ def invite():
 
         s.sendmail(gmail, invite_mail, message)
         s.quit()
+        return render_template('sent.html')
 
     return render_template('invite.html')
 
