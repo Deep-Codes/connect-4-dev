@@ -65,9 +65,9 @@ def left(msg):
 @app.route('/invite' , methods=['GET', 'POST'])
 def invite():
     if request.method == "POST":
-        player_name = request.form.get("username")
+        player_name = request.form.get("username").replace(" ", "")
         player_room = request.form.get("room")
-        invite_name = request.form.get("i-name")
+        invite_name = request.form.get("i-name").replace(" ", "")
         invite_mail = request.form.get("i-email")
         invite_link = 'http://localhost:5000/game?username=' + invite_name + '&room=' + player_room
 
@@ -82,7 +82,7 @@ def invite():
             <html>
               <head></head>
               <body>
-              <h1>Your have been invited to play Connect4 by one of your friend   """ + str(player_name) + """ +  </h1>
+              <h1>Your have been invited to play Connect4 by one of your friend   """ +str(player_name)+ """ +  </h1>
               <h2>Heres the link :   """ +str(invite_link) +  """ </h2>
               </body>
             </html>
