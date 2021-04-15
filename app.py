@@ -1,11 +1,12 @@
 from flask import Flask, render_template, url_for, request, redirect, session
 from flask_socketio import SocketIO, join_room, leave_room, emit
 from flask_session import Session
-import smtplib #for sending mail / automation
+import smtplib  # for sending mail / automation
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-slurs = ['fuck', 'bitch' , 'cunt' , 'ass' , 'arse' , 'dumbfuck' , 'motherfucker' , 'dick' , 'titties' , 'thekku' , 'boobs' , 'vagina' , 'shite' , 'wank' , 'shit' , 'porn' , 'chutiya' , 'bc' , 'madarchod' , 'lodu' , 'randi' , 'nigga' , 'nigger']
+slurs = ['fuck', 'bitch', 'cunt', 'ass', 'arse', 'dumbfuck', 'motherfucker', 'dick', 'titties', 'thekku', 'boobs',
+         'vagina', 'shite', 'wank', 'shit', 'porn', 'chutiya', 'bc', 'madarchod', 'lodu', 'randi', 'nigga', 'nigger']
 
 # FLASK_APP = app.py
 # FLASK_ENV = development
@@ -56,35 +57,42 @@ def join(msg):
 @socketio.on('text', namespace='/game')
 def text(msg):
     for i in slurs:
-        if msg['text'].find(i) != -1 :
-            msg['text'] = msg['text'].replace(i,"*"*len(i))
+        if msg['text'].find(i) != -1:
+            msg['text'] = msg['text'].replace(i, "*"*len(i))
     emit('message', msg, broadcast=True)
+
 
 @socketio.on('left', namespace='/game')
 def left(msg):
     emit('status', msg, broadcast=True)
 
-#invite-code
-@app.route('/invite' , methods=['GET', 'POST'])
+# invite-code
+
+
+@app.route('/invite', methods=['GET', 'POST'])
 def invite():
     if request.method == "POST":
         player_name = request.form.get("username").replace(" ", "")
         player_room = request.form.get("room")
         invite_name = request.form.get("i-name").replace(" ", "")
         invite_mail = request.form.get("i-email")
-        invite_link = 'http://localhost:5000/game?username=' + invite_name + '&room=' + player_room
+        invite_link = 'http://localhost:5000/game?username=' + \
+            invite_name + '&room=' + player_room
 
         gmail = 'connect.04.auth@gmail.com'
         password = 'damk.connect4'
-        subject='Invite Link For Connect-4 by ' + player_name
-        text='Email Body'
+        subject = 'Invite Link For Connect-4 by ' + player_name
+        text = 'Email Body'
 
         html = """\
             <html>
               <head></head>
               <body>
-              <h1>Your have been invited to play Connect4 by one of your friend   """ +str(player_name)+ """</h1>
-              <h2>Heres the link :   """ + str(invite_link) +  """ </h2>
+               <img src="https://i.postimg.cc/c4H0hC8g/logo.png" alt="logo" width="200px" >
+              <h3>Your have been invited to play Connect-4 by  """ + str(player_name) + """</h3>
+              <h4> Here's Link : 
+                <a href=" """ + str(invite_link) + """ ">Play the Game</a>
+              </h4>
               </body>
             </html>
             """
@@ -101,12 +109,12 @@ def invite():
         s.starttls()
         s.login(gmail, password)
 
-        s.sendmail(gmail,invite_mail, message)
+        s.sendmail(gmail, invite_mail, message)
         s.quit()
 
     return render_template('invite.html')
 
-#invite-end
+# invite-end
 
 
 if __name__ == '__main__':
