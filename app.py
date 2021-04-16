@@ -34,6 +34,11 @@ def game():
     return render_template('game.html')
 
 
+@app.route('/computer', methods=['GET', 'POST'])
+def computer():
+    return render_template('computer.html')
+
+
 @socketio.on('board', namespace='/game')
 def board(dt):
     emit('board', dt, broadcast=True)
@@ -112,7 +117,7 @@ def invite():
 
         s.sendmail(gmail, invite_mail, message)
         s.quit()
-        return render_template('sent.html' , invite_link = invite_link)
+        return render_template('sent.html', invite_link=invite_link)
 
     return render_template('invite.html')
 

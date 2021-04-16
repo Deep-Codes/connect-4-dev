@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" data-theme='theme-dark'>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/affinity-css@latest/css/index.css">
+  <link rel="stylesheet" href="/static/css/index.css">
+  <link rel="shortcut icon" href="/static/dark.svg" type="image/x-icon">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.1/socket.io.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.6/qs.min.js" integrity="sha512-3TmPrquYLaAsUmZKXRARTDC5siWhLAdBVqNo4dWpDABBtLU62AaoTaQJEvjxjExcZYurO6i1dnK85k8pPIBlRg==" crossorigin="anonymous"></script>
+</body>
+  <title>Game | Connect-4</title>
+</head>
+<body class="page">
+  <nav class="pl-10 pr-5">
+    <h2 class="mt-5 flex-center">
+      Connect
+      <img id="logo" class="ml-2" src="/static/dark.svg" width="40" alt="">
+    </h2>
+    <select name="" id="theme-select">
+      <option value="dark">Dark</option>
+      <option value="light">Light</option>
+    </select>
+  </nav>
+  
+  <div class="row-wrap">
+    <div id="board" class="mt-10">
+    </div>
+    <div class="ml-10">
+      <h4 id="username"></h4>
+      <textarea id="chat-feed" cols="50" rows="10" placeholder="No messages yet" readonly></textarea>
+      <audio id="audio" src="../static/media/drop.mp3"></audio>
+      <div>
+        <button type="button" class="mt-5" id="leave-chat-btn">
+          Leave
+        </button>
+        <button type="button" class="disabled mt-5" id="restart-btn">Play Again</button>
+      </div>
+    </div>
+  </div>
+  <script src="../static/js/computer.js"></script>
+</body>
+</html>
