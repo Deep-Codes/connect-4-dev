@@ -89,8 +89,9 @@ def invite():
               <head></head>
               <body>
                <img src="https://i.postimg.cc/c4H0hC8g/logo.png" alt="logo" width="200px" >
+               <h3> Hello """ + str(invite_name) + """ ! </h3>
               <h3>Your have been invited to play Connect-4 by  """ + str(player_name) + """</h3>
-              <h4> Here's Link : 
+              <h4> Here's Link :
                 <a href=" """ + str(invite_link) + """ ">Play the Game</a>
               </h4>
               </body>
@@ -111,7 +112,7 @@ def invite():
 
         s.sendmail(gmail, invite_mail, message)
         s.quit()
-        return render_template('sent.html')
+        return render_template('sent.html' , invite_link = invite_link)
 
     return render_template('invite.html')
 
