@@ -6,7 +6,7 @@ const audio = document.querySelector('#audio');
 const usernameText = document.querySelector('#username');
 
 // ? create empty board data
-let data = [...Array(6)].map(() => Array(7).fill(0));
+let boardData = [...Array(6)].map(() => Array(7).fill(0));
 
 const renderBoard = (dt) => {
   board.innerHTML = '';
@@ -18,9 +18,9 @@ const renderBoard = (dt) => {
       const cell = document.createElement('div');
       cell.classList.add(`cell`);
       cell.id = `c${i}${j}`;
-      if (c === 1) {
+      if (c === -1) {
         cell.style.backgroundColor = 'red';
-      } else if (c === 2) {
+      } else if (c === 1) {
         cell.style.backgroundColor = 'blue';
       }
 
@@ -30,9 +30,38 @@ const renderBoard = (dt) => {
   });
 };
 
-renderBoard(data);
+const playMoves = (id, player) => {
+  const col = id[2];
+  let fillRowNo;
+  let bool = false;
+  for (let c = 5; c >= 0; c--) {
+    if (boardData[c][col] === 0 && !bool) {
+      fillRowNo = c;
+      bool = true;
+    }
+  }
+  const cell = document.querySelector(`#c${fillRowNo}${id[2]}`);
+  if (player === -1) {
+    boardData[fillRowNo][[id[2]]] = -1;
+    cell.style.backgroundColor = 'red';
+  } else if (player === 1) {
+    boardData[fillRowNo][[id[2]]] = 1;
+    cell.style.backgroundColor = 'blue';
+  }
+};
 
-console.log(data);
+renderBoard(boardData);
+
+board.addEventListener('click', (e) => {
+  if (e.target.className === 'cell') {
+    const id = e.target.id;
+    // avoid re selecting the cell
+    if (boardData[id[1]][[id[2]]] === 0) {
+      audio.play();
+      playMoves(id, -1);
+    }
+  }
+});
 
 // theme stuff here
 const themeSelect = document.querySelector('#theme-select');
