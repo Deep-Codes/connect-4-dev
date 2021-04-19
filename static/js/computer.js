@@ -112,7 +112,7 @@ const playMoves = (id, player) => {
 };
 
 const postRequest = (dt) => {
-  fetch(`http://127.0.0.1:5000/computer?board=${JSON.stringify(dt)}`, {
+  fetch(`http://localhost:5000/computer?board=${JSON.stringify(dt)}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
