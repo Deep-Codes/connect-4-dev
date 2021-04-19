@@ -31,6 +31,58 @@ const renderBoard = (dt) => {
 };
 renderBoard(boardData);
 
+// https://stackoverflow.com/questions/33181356/connect-four-game-checking-for-wins-js
+function chkLine(a, b, c, d) {
+  // Check first cell non-zero and all cells match
+  return a != 0 && a == b && a == c && a == d;
+}
+
+function chkWinner(bd) {
+  // Check down
+  for (r = 0; r < 3; r++)
+    for (c = 0; c < 7; c++)
+      if (chkLine(bd[r][c], bd[r + 1][c], bd[r + 2][c], bd[r + 3][c]))
+        return bd[r][c];
+
+  // Check right
+  for (r = 0; r < 6; r++)
+    for (c = 0; c < 4; c++)
+      if (chkLine(bd[r][c], bd[r][c + 1], bd[r][c + 2], bd[r][c + 3]))
+        return bd[r][c];
+
+  // Check down-right
+  for (r = 0; r < 3; r++)
+    for (c = 0; c < 4; c++)
+      if (
+        chkLine(bd[r][c], bd[r + 1][c + 1], bd[r + 2][c + 2], bd[r + 3][c + 3])
+      )
+        return bd[r][c];
+
+  // Check down-left
+  for (r = 3; r < 6; r++)
+    for (c = 0; c < 4; c++)
+      if (
+        chkLine(bd[r][c], bd[r - 1][c + 1], bd[r - 2][c + 2], bd[r - 3][c + 3])
+      )
+        return bd[r][c];
+
+  return 0;
+}
+
+const computeWinnerComp = (dt) => {
+  let winner = chkWinner(dt);
+  if (winner === -1) {
+    chatFeed.value = chatFeed.value + '🎉 YOU BEAT THE COMPUTER! \n';
+    audio.src = './static/media/win.mp3';
+    audio.play();
+  } else if (winner === 1) {
+    chatFeed.value = chatFeed.value + '🤖 COMPUTER has WON! \n';
+    audio.src = './static/media/win.mp3';
+    audio.play();
+  } else {
+  }
+};
+
 const playMoves = (id, player) => {
   const col = id[2];
   let fillRowNo;
@@ -60,10 +112,8 @@ const postRequest = (dt) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      setTimeout(() => {
-        playMoves(`c0${data}`, 1);
-        chatFeed.value = chatFeed.value + '🤖 COMPUTER Played a Move! \n';
-      }, 300);
+      playMoves(`c0${data}`, 1);
+      chatFeed.value = chatFeed.value + '🤖 COMPUTER Played a Move! \n';
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -79,6 +129,9 @@ board.addEventListener('click', (e) => {
       playMoves(id, -1);
       chatFeed.value = chatFeed.value + '🎮 YOU Played a Move! \n';
       postRequest(boardData);
+      setTimeout(() => {
+        computeWinnerComp(boardData);
+      }, 100);
     }
   }
 });
