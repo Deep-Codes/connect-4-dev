@@ -5,6 +5,14 @@ const restartBtn = document.querySelector('#restart-btn');
 const audio = document.querySelector('#audio');
 const usernameText = document.querySelector('#username');
 
+document.getElementById('restart-btn').addEventListener('click', () => {
+  location.href = '/computer';
+});
+
+document.getElementById('leave-chat-btn').addEventListener('click', () => {
+  location.href = '/';
+});
+
 // ? create empty board data
 let boardData = [...Array(6)].map(() => Array(7).fill(0));
 
@@ -120,6 +128,10 @@ const postRequest = (dt) => {
     });
 };
 
+const scrollUpChatFeed = () => {
+  chatFeed.scrollTop = chatFeed.scrollHeight;
+};
+
 board.addEventListener('click', (e) => {
   if (e.target.className === 'cell') {
     const id = e.target.id;
@@ -131,6 +143,7 @@ board.addEventListener('click', (e) => {
       postRequest(boardData);
       setTimeout(() => {
         computeWinnerComp(boardData);
+        scrollUpChatFeed();
       }, 100);
     }
   }
