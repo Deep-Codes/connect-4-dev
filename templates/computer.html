@@ -10,7 +10,7 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.1/socket.io.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.6/qs.min.js" integrity="sha512-3TmPrquYLaAsUmZKXRARTDC5siWhLAdBVqNo4dWpDABBtLU62AaoTaQJEvjxjExcZYurO6i1dnK85k8pPIBlRg==" crossorigin="anonymous"></script>
 </body>
-  <title>Game | Connect-4</title>
+  <title>Computer | Connect-4</title>
 </head>
 <body class="page">
   <nav class="pl-10 pr-5">
@@ -20,7 +20,6 @@
         <img id="logo" class="ml-2" src="/static/dark.svg" width="40" alt="">
       </h2>
     </a>
-   
     <select name="" id="theme-select">
       <option value="dark">Dark</option>
       <option value="light">Light</option>
@@ -33,18 +32,15 @@
     <div class="ml-10">
       <h4 id="username"></h4>
       <textarea id="chat-feed" cols="50" rows="10" placeholder="No messages yet" readonly></textarea>
-      <input type="text" class="w-100 mt-5" id="chat-input" placeholder="Enter your message here" />
       <audio id="audio" src="../static/media/drop.mp3"></audio>
       <div>
-        <button type="button" class="mt-5 mr-5" id="chat-send-btn">Send</button>
         <button type="button" class="mt-5" id="leave-chat-btn">
           Leave
         </button>
-        <button type="button" class="disabled mt-5" id="restart-btn">Play Again</button>
+        <button type="button" class=" mt-5" id="restart-btn">Play Again</button>
       </div>
     </div>
   </div>
-  
-  <script src="../static/js/app.js"></script>
+  <script src="../static/js/computer.js"></script>
 </body>
 </html>

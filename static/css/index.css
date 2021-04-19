@@ -17,6 +17,9 @@ nav {
   justify-content: space-between;
   align-items: center;
 }
+a {
+  color: inherit;
+}
 .page {
   max-width: 1000px;
   min-height: 100vh;

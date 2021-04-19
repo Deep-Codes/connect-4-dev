@@ -1,9 +1,13 @@
+# pylint: disable-all
+
 from flask import Flask, render_template, url_for, request, redirect, session
 from flask_socketio import SocketIO, join_room, leave_room, emit
 from flask_session import Session
 import smtplib  # for sending mail / automation
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from computer import bestMove
+import json
 
 slurs = ['fuck', 'bitch', 'cunt', 'ass', 'arse', 'dumbfuck', 'motherfucker', 'dick', 'titties', 'thekku', 'boobs',
          'vagina', 'shite', 'wank', 'shit', 'porn', 'chutiya', 'bc', 'madarchod', 'lodu', 'randi', 'nigga', 'nigger']
@@ -32,6 +36,18 @@ def index():
 @app.route('/game', methods=['GET', 'POST'])
 def game():
     return render_template('game.html')
+
+
+@app.route('/computer', methods=['GET', 'POST'])
+def computer():
+    if request.method == 'POST':
+        board = request.args.get('board')
+        print(type(board))
+        res = json.loads(board)
+        move = bestMove(res, 1, -1)
+        return str(move)
+    else:
+        return render_template('computer.html')
 
 
 @socketio.on('board', namespace='/game')
@@ -112,7 +128,7 @@ def invite():
 
         s.sendmail(gmail, invite_mail, message)
         s.quit()
-        return render_template('sent.html' , invite_link = invite_link)
+        return render_template('sent.html', invite_link=invite_link)
 
     return render_template('invite.html')
 
