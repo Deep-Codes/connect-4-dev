@@ -29,6 +29,7 @@ const renderBoard = (dt) => {
     board.appendChild(row);
   });
 };
+renderBoard(boardData);
 
 const playMoves = (id, player) => {
   const col = id[2];
@@ -50,7 +51,24 @@ const playMoves = (id, player) => {
   }
 };
 
-renderBoard(boardData);
+const postRequest = (dt) => {
+  fetch(`http://127.0.0.1:5000/computer?board=${JSON.stringify(dt)}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      setTimeout(() => {
+        playMoves(`c0${data}`, 1);
+        chatFeed.value = chatFeed.value + '🤖 COMPUTER Played a Move! \n';
+      }, 300);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+};
 
 board.addEventListener('click', (e) => {
   if (e.target.className === 'cell') {
@@ -59,6 +77,8 @@ board.addEventListener('click', (e) => {
     if (boardData[id[1]][[id[2]]] === 0) {
       audio.play();
       playMoves(id, -1);
+      chatFeed.value = chatFeed.value + '🎮 YOU Played a Move! \n';
+      postRequest(boardData);
     }
   }
 });
